@@ -36,11 +36,9 @@ function App() {
       femaleCount: 0,
     }));
 
-    // Separate students by gender
     const females = data.filter((student) => student.Gender === "Female");
     const males = data.filter((student) => student.Gender === "Male");
 
-    // Step 1: Distribute females evenly across groups in a round-robin manner
     females.forEach((female, index) => {
       const targetGroup = groups[index % numGroups];
       targetGroup.students.push(female);
@@ -49,7 +47,6 @@ function App() {
       female.Group = `Group ${index % numGroups + 1}`;
     });
 
-    // Step 2: Distribute males to ensure even group sizes
     males.forEach((male, index) => {
       const targetGroup = groups[index % numGroups];
       targetGroup.students.push(male);
@@ -57,7 +54,6 @@ function App() {
       male.Group = `Group ${index % numGroups + 1}`;
     });
 
-    // Combine groups back into a single data array, preserving original order
     return data.map((student) => {
       const assignedStudent = groups
         .flatMap((group) => group.students)
@@ -80,11 +76,38 @@ function App() {
       .catch((err) => alert("Failed to copy: " + err));
   };
 
+  const triggerFileInput = () => {
+    document.getElementById("file-input").click();
+  };
+
   return (
     <div className="App">
       <h1>The magic button</h1>
       <h4>Upload the xlsx file like you sent me without the students being divided in to groups then click on Copy group column and paste it in to your file.</h4>
-      <input type="file" accept=".xlsx" onChange={handleFileUpload} />
+      
+      {/* Hidden file input */}
+      <input 
+        id="file-input" 
+        type="file" 
+        accept=".xlsx" 
+        onChange={handleFileUpload} 
+        style={{ display: "none" }} 
+      />
+      
+      {/* Custom upload button */}
+      <button onClick={triggerFileInput} style={{ 
+        color: "white", 
+        backgroundColor: "red", 
+        padding: "10px 20px", 
+        border: "none", 
+        borderRadius: "5px", 
+        cursor: "pointer", 
+        fontSize: "16px",
+        fontWeight: "bold" 
+      }}>
+        Upload File
+      </button>
+
       {error && <p style={{ color: "red" }}>{error}</p>}
 
       {table.length > 0 && (
